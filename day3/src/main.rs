@@ -35,23 +35,42 @@ fn part_one() -> u64 {
 
     for bank in banks {
         let (first, fi) = find_highest_with_index(&bank[..bank.len() - 1]);
-        dbg!(fi);
         let (second, _) = find_highest_with_index(&bank[fi + 1..]);
 
         let val: u64 = format!("{}{}", first, second)
             .parse()
             .expect("parse as int");
-
-        dbg!(val);
-
         total = total + val;
     }
 
-    dbg!(total);
+    total
+}
+
+const MAX_BANKS: u64 = 12;
+
+fn part_two() -> u64 {
+    let banks = parse_input(include_str!("../input.txt"));
+
+    let mut total: u64 = 0;
+    for bank in banks {
+        let mut joltage = String::new();
+        let mut start_index = 0;
+        for i in 0..MAX_BANKS {
+            let needed = MAX_BANKS - i;
+
+            let (f, fi) =
+                find_highest_with_index(&bank[start_index..(bank.len() + 1) - needed as usize]);
+
+            joltage.push_str(&f.to_string());
+            start_index = start_index + fi + 1;
+        }
+        total += joltage.parse::<u64>().expect("can parse as string");
+    }
+
     total
 }
 
 fn main() {
-    part_one();
-    println!("Hello, world!");
+    // part_one();
+    part_two();
 }
